@@ -505,7 +505,7 @@ textarea.form-input{resize:vertical;line-height:1.5;}
       <div id="page-instagram" class="hidden">
         <div class="page-header">
           <div><div class="page-title">📱 Instagram</div><div class="page-sub">KPIs mensais por cliente</div></div>
-          <button class="btn btn-primary" onclick="openModal('instagram-entry')">＋ Inserir dados</button>
+          <button class="btn btn-primary" onclick="openIgEntry()">＋ Inserir dados</button>
         </div>
         <div class="content">
           <!-- Seletor -->
@@ -515,7 +515,7 @@ textarea.form-input{resize:vertical;line-height:1.5;}
             </select>
             <select id="ig-month-sel" onchange="renderInstagram()" class="form-input" style="max-width:180px">
             </select>
-            <button class="btn btn-ghost btn-sm" onclick="openModal('instagram-entry')">✏️ Editar dados deste mês</button>
+            <button class="btn btn-ghost btn-sm" onclick="openIgEntry()">✏️ Editar dados deste mês</button>
           </div>
 
           <!-- Métricas Instagram -->

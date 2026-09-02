@@ -194,6 +194,10 @@ body{font-family:'Poppins',system-ui,sans-serif;background:var(--bg);color:var(-
 .fin-status.paid{background:#dcfce7;color:#16a34a;}
 .fin-status.pending{background:#fee2e2;color:#dc2626;}
 .fin-status.partial{background:#fef3c7;color:#d97706;}
+.fin-recebido-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0;}
+.fin-recebido-lbl{font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+.fin-recebido-input{width:110px;background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;color:var(--text);padding:6px 9px;font-size:13px;font-weight:700;text-align:right;font-family:'Poppins',sans-serif;}
+.fin-recebido-input:focus{outline:none;border-color:var(--purple);background:#fff;box-shadow:0 0 0 3px rgba(108,99,255,.1);}
 .suggestion{background:linear-gradient(135deg,#ede9fe,#faf5ff);border:1.5px solid rgba(108,99,255,.2);border-radius:var(--rxl);padding:18px 20px;margin-bottom:20px;}
 .suggestion-title{font-size:11px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;}
 .sug-client{margin-bottom:10px;padding:12px 14px;background:#fff;border-radius:var(--r);display:flex;align-items:center;justify-content:space-between;border:1.5px solid var(--border);}
@@ -233,6 +237,11 @@ textarea.form-input{resize:vertical;line-height:1.5;}
 .ig-kpi-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--rl);padding:16px;text-align:center;box-shadow:var(--shadow-sm);}
 .ig-kpi-val{font-size:22px;font-weight:800;margin-bottom:4px;}
 .ig-kpi-lbl{font-size:11px;color:var(--text3);font-weight:500;}
+.ig-content-card{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;}
+.ig-content-embed{flex-shrink:0;width:200px;border-radius:var(--r);overflow:hidden;border:1.5px solid var(--border);background:var(--bg3);}
+.ig-content-embed iframe{width:100%;height:260px;border:none;display:block;}
+.ig-content-info{flex:1;min-width:180px;}
+.ig-content-empty{font-size:12px;color:var(--text3);text-align:center;padding:16px 0;}
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
@@ -415,17 +424,20 @@ textarea.form-input{resize:vertical;line-height:1.5;}
             <div style="font-size:13px">Selecione um cliente e clique em "＋ Inserir dados"</div>
           </div>
           <div id="ig-dash" class="hidden">
-            <div class="metrics" id="ig-metrics" style="grid-template-columns:repeat(4,1fr)"></div>
+            <div class="metrics" id="ig-metrics" style="grid-template-columns:repeat(3,1fr)"></div>
             <div class="grid-2">
               <div class="card"><div class="card-header"><div class="card-title">📈 Evolução mensal (visualizações)</div></div><div class="card-body" id="ig-evolution"></div></div>
               <div class="card"><div class="card-header"><div class="card-title">💡 Insights estratégicos</div></div><div class="card-body" id="ig-insights"></div></div>
+            </div>
+            <div class="grid-2">
+              <div class="card"><div class="card-header"><div class="card-title">🚀 Conteúdo que mais gerou seguidores</div></div><div class="card-body" id="ig-top-followers"></div></div>
+              <div class="card"><div class="card-header"><div class="card-title">🏆 Conteúdo com mais visualização</div></div><div class="card-body" id="ig-top-content"></div></div>
             </div>
             <div class="grid-3">
               <div class="card"><div class="card-header"><div class="card-title">👥 Crescimento</div></div><div class="card-body" id="ig-growth"></div></div>
               <div class="card"><div class="card-header"><div class="card-title">❤️ Engajamento</div></div><div class="card-body" id="ig-engagement"></div></div>
               <div class="card"><div class="card-header"><div class="card-title">🔗 Alcance</div></div><div class="card-body" id="ig-reach"></div></div>
             </div>
-            <div class="card" style="margin-bottom:16px"><div class="card-header"><div class="card-title">🏆 Post com maior engajamento</div></div><div class="card-body" id="ig-top-content"></div></div>
             <div class="card"><div class="card-header"><div class="card-title">📅 Histórico comparativo</div></div><div class="card-body" id="ig-history"></div></div>
           </div>
         </div>
@@ -497,21 +509,22 @@ textarea.form-input{resize:vertical;line-height:1.5;}
     <div style="background:var(--bg3);border-radius:var(--r);padding:14px;margin-bottom:14px;">
       <div class="form-label" style="margin-bottom:10px">📊 Métricas</div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">➕ Seguidores novos</label><input class="form-input" type="number" id="ig-seguidores" placeholder="0" min="0"/></div>
-        <div class="form-group"><label class="form-label">👥 Contas alcançadas</label><input class="form-input" type="number" id="ig-alcance" placeholder="0" min="0"/></div>
+        <div class="form-group"><label class="form-label">➕ Seguidores novos</label><input class="form-input" type="number" step="any" id="ig-seguidores" placeholder="0" min="0"/></div>
+        <div class="form-group"><label class="form-label">🔗 Cliques link da bio</label><input class="form-input" type="number" step="any" id="ig-bio" placeholder="0" min="0"/></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">🔗 Cliques link da bio</label><input class="form-input" type="number" id="ig-bio" placeholder="0" min="0"/></div>
-        <div class="form-group"><label class="form-label">❤️ Engajamento total</label><input class="form-input" type="number" id="ig-engajamento" placeholder="0" min="0"/></div>
+        <div class="form-group"><label class="form-label">❤️ Engajamento total</label><input class="form-input" type="number" step="any" id="ig-engajamento" placeholder="0" min="0"/></div>
+        <div class="form-group"><label class="form-label">👁️ Visualizações gerais</label><input class="form-input" type="number" step="any" id="ig-views" placeholder="0" min="0"/></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">👁️ Visualizações gerais</label><input class="form-input" type="number" id="ig-views" placeholder="0" min="0"/></div>
-        <div class="form-group"><label class="form-label">🌍 Views não seguidores</label><input class="form-input" type="number" id="ig-views-nseg" placeholder="0" min="0"/></div>
+        <div class="form-group"><label class="form-label">🌍 Views não seguidores</label><input class="form-input" type="number" step="any" id="ig-views-nseg" placeholder="0" min="0"/></div>
+        <div class="form-group"><label class="form-label">🔄 Conteúdos compartilhados</label><input class="form-input" type="number" step="any" id="ig-shares" placeholder="0" min="0"/></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">🔄 Conteúdos compartilhados</label><input class="form-input" type="number" id="ig-shares" placeholder="0" min="0"/></div>
         <div class="form-group"><label class="form-label">🏆 Post maior visualização (link)</label><input class="form-input" id="ig-top-post" placeholder="https://www.instagram.com/p/..."/></div>
+        <div class="form-group"><label class="form-label">🚀 Post que mais gerou seguidores (link)</label><input class="form-input" id="ig-top-follow-post" placeholder="https://www.instagram.com/p/..."/></div>
       </div>
+      <div class="form-group"><label class="form-label">🚀 Seguidores gerados por esse post</label><input class="form-input" type="number" step="any" id="ig-top-follow-count" placeholder="0" min="0"/></div>
     </div>
     <div class="form-group"><label class="form-label">📝 Observações / Estratégia próximo mês</label><textarea class="form-input" id="ig-obs" rows="3" placeholder="O que funcionou, o que ajustar..."></textarea></div>
     <div class="form-actions"><button class="btn btn-ghost" onclick="closeModal('instagram')">✕ Cancelar</button><button class="btn btn-primary" onclick="saveIgData()">💾 Salvar dados</button></div>
@@ -549,6 +562,26 @@ function setFbStatus(ok){const d=document.getElementById('fb-dot'),t=document.ge
 async function fbAdd(col,data){if(!db)return null;try{const r=await db.collection(col).add(data);return r.id;}catch(e){return null;}}
 async function fbSet(col,id,data){if(!db)return;try{await db.collection(col).doc(id).set(data,{merge:true});}catch(e){console.warn(e);}}
 async function fbDel(col,id){if(!db)return;try{await db.collection(col).doc(id).delete();}catch(e){}}
+// converte texto digitado em número exato, sem arredondar (aceita vírgula ou ponto)
+function parseNum(v){if(v===null||v===undefined||v==='')return 0;const n=parseFloat(String(v).replace(',','.'));return isNaN(n)?0:n;}
+// extrai o ID de um post/reel do Instagram a partir do link, para montar o embed
+function igEmbedUrl(link){
+  if(!link)return null;
+  const m=link.match(/instagram\.com\/(p|reel|tv)\/([A-Za-z0-9_-]+)/);
+  if(!m)return null;
+  return`https://www.instagram.com/${m[1]}/${m[2]}/embed`;
+}
+function renderIgContentCard(link,extraLabel,extraVal,extraColor){
+  if(!link)return`<div class="ig-content-empty">Nenhum link cadastrado</div>`;
+  const embed=igEmbedUrl(link);
+  return`<div class="ig-content-card">
+    ${embed?`<div class="ig-content-embed"><iframe src="${embed}" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>`:''}
+    <div class="ig-content-info">
+      ${extraLabel?`<div class="highlight-row"><span class="highlight-label">${extraLabel}</span><span class="highlight-val" style="${extraColor?'color:'+extraColor:''}">${extraVal}</span></div>`:''}
+      <a href="${link}" target="_blank" class="link-preview" style="margin-top:8px">🔗 Ver post no Instagram</a>
+    </div>
+  </div>`;
+}
 
 // ── Load ──
 function skipLoad(){
@@ -794,25 +827,28 @@ function populateFinMes(){
   const now=new Date(),cur=sel.value;sel.innerHTML='';
   for(let i=5;i>=-1;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);const val=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;sel.innerHTML+=`<option value="${val}" ${(!cur&&i===0)||cur===val?'selected':''}>${d.toLocaleDateString('pt-BR',{month:'long',year:'numeric'})}</option>`;}
 }
-async function togglePayment(clientId){
+async function updateValorRecebido(clientId,rawValue){
   const mes=document.getElementById('fin-mes').value;const key=`${clientId}_${mes}`;
-  const cur=(state.payments[key]||{status:'pending'}).status;
-  const next=cur==='pending'?'paid':cur==='paid'?'partial':'pending';
-  state.payments[key]={status:next,updatedAt:new Date().toISOString()};
+  const c=state.clients.find(c=>c.id===clientId);if(!c)return;
+  // aceita 0 normalmente — só cai no default quando o campo fica vazio ou inválido
+  const valor=(rawValue===''||rawValue===null||rawValue===undefined||isNaN(parseFloat(rawValue)))?0:parseFloat(rawValue);
+  const status=valor<=0?'pending':valor>=c.valor?'paid':'partial';
+  state.payments[key]={status,valorRecebido:valor,updatedAt:new Date().toISOString()};
   if(db)await fbSet('payments',key,state.payments[key]);
   saveLocal();renderFinanceiro();
 }
 function renderFinanceiro(){
   const mes=document.getElementById('fin-mes').value;if(!mes)return;
   let rec=0,pend=0,tot=0;
-  const rows=state.clients.map(c=>{const p=(state.payments[`${c.id}_${mes}`]||{status:'pending'});tot+=c.valor;if(p.status==='paid')rec+=c.valor;else pend+=c.valor;return{c,p};});
+  const rows=state.clients.map(c=>{const p=(state.payments[`${c.id}_${mes}`]||{status:'pending',valorRecebido:0});tot+=c.valor;const vr=p.valorRecebido!=null?p.valorRecebido:(p.status==='paid'?c.valor:0);rec+=vr;pend+=Math.max(c.valor-vr,0);return{c,p,vr};});
   setText('fin-recebido','R$ '+rec.toLocaleString('pt-BR'));setText('fin-pendente','R$ '+pend.toLocaleString('pt-BR'));setText('fin-total','R$ '+tot.toLocaleString('pt-BR'));
   const el=document.getElementById('fin-rows');if(!el)return;
   if(!state.clients.length){el.innerHTML='<div class="t-muted" style="font-size:12px;text-align:center;padding:28px 0">Nenhum cliente</div>';return;}
   const lbl={paid:'✅ Pago',pending:'⏳ Pendente',partial:'⚠️ Parcial'};
-  el.innerHTML=rows.map(({c,p})=>{
+  el.innerHTML=rows.map(({c,p,vr})=>{
     const ini=c.nome.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    return`<div class="fin-row"><div class="fin-check ${p.status||'pending'}" onclick="togglePayment('${c.id}')">${p.status==='paid'?'✓':p.status==='partial'?'½':''}</div><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--pl));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0">${ini}</div><div class="fin-client-name">${c.nome}</div><div style="font-size:11px;color:var(--text3)">${c.tipo==='mensal'?'Mensal':'Projeto'}</div><div class="fin-valor">R$ ${c.valor.toLocaleString('pt-BR')}</div><span class="fin-status ${p.status||'pending'}">${lbl[p.status]||'⏳ Pendente'}</span></div>`;
+    const status=p.status||(vr>=c.valor&&vr>0?'paid':vr>0?'partial':'pending');
+    return`<div class="fin-row"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--pl));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0">${ini}</div><div class="fin-client-name">${c.nome}</div><div style="font-size:11px;color:var(--text3)">${c.tipo==='mensal'?'Mensal':'Projeto'}</div><div class="fin-valor">R$ ${c.valor.toLocaleString('pt-BR')}</div><div class="fin-recebido-wrap"><span class="fin-recebido-lbl">Recebido</span><input class="fin-recebido-input" type="number" step="any" min="0" value="${vr}" onchange="updateValorRecebido('${c.id}', this.value)"/></div><span class="fin-status ${status}">${lbl[status]||'⏳ Pendente'}</span></div>`;
   }).join('');
 }
 
@@ -974,14 +1010,15 @@ function openIgModal(){
   // preencher se já tiver dados
   const key=clientId&&month?`${clientId}_${month}`:null;
   const d=key?state.instagram[key]:null;
-  document.getElementById('ig-seguidores').value=d?d.seguidores||0:'';
-  document.getElementById('ig-alcance').value=d?d.alcance||0:'';
-  document.getElementById('ig-bio').value=d?d.bio||0:'';
-  document.getElementById('ig-engajamento').value=d?d.engajamento||0:'';
-  document.getElementById('ig-views').value=d?d.views||0:'';
-  document.getElementById('ig-views-nseg').value=d?d.viewsNseg||0:'';
-  document.getElementById('ig-shares').value=d?d.shares||0:'';
+  document.getElementById('ig-seguidores').value=d&&d.seguidores!=null?d.seguidores:'';
+  document.getElementById('ig-bio').value=d&&d.bio!=null?d.bio:'';
+  document.getElementById('ig-engajamento').value=d&&d.engajamento!=null?d.engajamento:'';
+  document.getElementById('ig-views').value=d&&d.views!=null?d.views:'';
+  document.getElementById('ig-views-nseg').value=d&&d.viewsNseg!=null?d.viewsNseg:'';
+  document.getElementById('ig-shares').value=d&&d.shares!=null?d.shares:'';
   document.getElementById('ig-top-post').value=d?d.topPost||'':'';
+  document.getElementById('ig-top-follow-post').value=d?d.topFollowPost||'':'';
+  document.getElementById('ig-top-follow-count').value=d&&d.topFollowCount!=null?d.topFollowCount:'';
   document.getElementById('ig-obs').value=d?d.obs||'':'';
   document.getElementById('modal-instagram').classList.remove('hidden');
 }
@@ -993,14 +1030,15 @@ async function saveIgData(){
   const key=`${clientId}_${month}`;
   const data={
     clientId,month,
-    seguidores:parseInt(document.getElementById('ig-seguidores').value)||0,
-    alcance:parseInt(document.getElementById('ig-alcance').value)||0,
-    bio:parseInt(document.getElementById('ig-bio').value)||0,
-    engajamento:parseInt(document.getElementById('ig-engajamento').value)||0,
-    views:parseInt(document.getElementById('ig-views').value)||0,
-    viewsNseg:parseInt(document.getElementById('ig-views-nseg').value)||0,
-    shares:parseInt(document.getElementById('ig-shares').value)||0,
+    seguidores:parseNum(document.getElementById('ig-seguidores').value),
+    bio:parseNum(document.getElementById('ig-bio').value),
+    engajamento:parseNum(document.getElementById('ig-engajamento').value),
+    views:parseNum(document.getElementById('ig-views').value),
+    viewsNseg:parseNum(document.getElementById('ig-views-nseg').value),
+    shares:parseNum(document.getElementById('ig-shares').value),
     topPost:document.getElementById('ig-top-post').value.trim(),
+    topFollowPost:document.getElementById('ig-top-follow-post').value.trim(),
+    topFollowCount:parseNum(document.getElementById('ig-top-follow-count').value),
     obs:document.getElementById('ig-obs').value.trim(),
     updatedAt:new Date().toISOString()
   };
@@ -1027,14 +1065,13 @@ function renderInstagram(){
   if(!d){if(empty)empty.classList.remove('hidden');if(dash)dash.classList.add('hidden');return;}
   if(empty)empty.classList.add('hidden');if(dash)dash.classList.remove('hidden');
 
-  const taxaEng=d.alcance>0?((d.engajamento/d.alcance)*100).toFixed(1):0;
+  const taxaEng=d.views>0?((d.engajamento/d.views)*100).toFixed(1):0;
   const pctNseg=d.views>0?((d.viewsNseg/d.views)*100).toFixed(0):0;
 
   // métricas
   const igM=document.getElementById('ig-metrics');
   if(igM)igM.innerHTML=`
     <div class="metric-card"><div class="metric-accent ma-pink"></div><div class="metric-icon-wrap mw-pink">👁️</div><div class="metric-label">Visualizações</div><div class="metric-value" style="color:#e1306c">${d.views.toLocaleString('pt-BR')}</div><div class="metric-sub">${pctNseg}% não seguidores</div></div>
-    <div class="metric-card"><div class="metric-accent ma-purple"></div><div class="metric-icon-wrap mw-purple">👥</div><div class="metric-label">Contas alcançadas</div><div class="metric-value t-purple">${d.alcance.toLocaleString('pt-BR')}</div></div>
     <div class="metric-card"><div class="metric-accent" style="background:linear-gradient(90deg,#f56040,#e1306c)"></div><div class="metric-icon-wrap mw-orange">❤️</div><div class="metric-label">Engajamento</div><div class="metric-value" style="color:#f56040">${d.engajamento.toLocaleString('pt-BR')}</div><div class="metric-sub">Taxa: ${taxaEng}%</div></div>
     <div class="metric-card"><div class="metric-accent ma-green"></div><div class="metric-icon-wrap mw-green">➕</div><div class="metric-label">Novos seguidores</div><div class="metric-value t-success">+${d.seguidores.toLocaleString('pt-BR')}</div></div>
   `;
@@ -1055,7 +1092,7 @@ function renderInstagram(){
     const ins=[];
     if(taxaEng>=3)ins.push({e:'🔥',t:`Engajamento excelente: ${taxaEng}%`,c:'var(--success)'});
     else if(taxaEng>=1)ins.push({e:'📊',t:`Engajamento ok (${taxaEng}%) — reforçar CTAs`,c:'var(--warn)'});
-    else if(d.alcance>0)ins.push({e:'⚠️',t:`Engajamento baixo (${taxaEng}%) — revisar conteúdo`,c:'var(--danger)'});
+    else if(d.views>0)ins.push({e:'⚠️',t:`Engajamento baixo (${taxaEng}%) — revisar conteúdo`,c:'var(--danger)'});
     if(pctNseg>50)ins.push({e:'🌍',t:`${pctNseg}% das views são de não seguidores — ótimo alcance orgânico!`,c:'var(--purple)'});
     if(d.seguidores>0)ins.push({e:'📈',t:`+${d.seguidores} seguidores este mês`,c:'#2563eb'});
     if(d.bio>0)ins.push({e:'🔗',t:`${d.bio} cliques no link da bio`,c:'#db2777'});
@@ -1063,21 +1100,23 @@ function renderInstagram(){
     igIns.innerHTML=ins.length?ins.map(i=>`<div style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)"><span style="font-size:16px">${i.e}</span><span style="font-size:12px;color:${i.c};font-weight:500;line-height:1.4">${i.t}</span></div>`).join(''):'<div class="t-muted" style="font-size:12px;padding:16px 0;text-align:center">Adicione dados para ver insights</div>';
   }
 
+  // conteúdo que mais gerou seguidores
+  const igTF=document.getElementById('ig-top-followers');
+  if(igTF)igTF.innerHTML=renderIgContentCard(d.topFollowPost,'🚀 Seguidores gerados',(d.topFollowCount||0).toLocaleString('pt-BR'),'var(--success)');
+
+  // conteúdo com mais visualização
+  const igT=document.getElementById('ig-top-content');
+  if(igT)igT.innerHTML=renderIgContentCard(d.topPost);
+
   // cards menores
   const igG=document.getElementById('ig-growth');if(igG)igG.innerHTML=`<div class="highlight-row"><span class="highlight-label">➕ Novos seguidores</span><span class="highlight-val t-success">+${d.seguidores.toLocaleString('pt-BR')}</span></div><div class="highlight-row"><span class="highlight-label">🔄 Compartilhamentos</span><span class="highlight-val">${d.shares.toLocaleString('pt-BR')}</span></div><div class="highlight-row"><span class="highlight-label">🔗 Cliques link bio</span><span class="highlight-val">${d.bio.toLocaleString('pt-BR')}</span></div>`;
   const igEng=document.getElementById('ig-engagement');if(igEng)igEng.innerHTML=`<div class="highlight-row"><span class="highlight-label">❤️ Total interações</span><span class="highlight-val" style="color:#e1306c">${d.engajamento.toLocaleString('pt-BR')}</span></div><div class="highlight-row"><span class="highlight-label">📊 Taxa engajamento</span><span class="highlight-val" style="color:${taxaEng>=3?'var(--success)':taxaEng>=1?'var(--warn)':'var(--danger)'}">${taxaEng}%</span></div>`;
   const igR=document.getElementById('ig-reach');if(igR)igR.innerHTML=`<div class="highlight-row"><span class="highlight-label">👁️ Views totais</span><span class="highlight-val">${d.views.toLocaleString('pt-BR')}</span></div><div class="highlight-row"><span class="highlight-label">🌍 Views não seguidores</span><span class="highlight-val">${d.viewsNseg.toLocaleString('pt-BR')}</span></div><div class="highlight-row"><span class="highlight-label">% não seguidores</span><span class="highlight-val t-purple">${pctNseg}%</span></div>`;
 
-  // top post
-  const igT=document.getElementById('ig-top-content');
-  if(igT)igT.innerHTML=d.topPost?`<div style="padding:10px 0"><span style="font-size:13px;font-weight:600;margin-right:12px">🏆 Post com maior visualização:</span><a href="${d.topPost}" target="_blank" style="color:var(--purple);font-size:12px;font-weight:600;text-decoration:none">🔗 Ver post no Instagram</a></div>`:'<div class="t-muted" style="font-size:12px;padding:12px 0;text-align:center">Nenhum link cadastrado</div>';
-
   // histórico
+  const entries=Object.values(state.instagram).filter(e=>e.clientId===clientId).sort((a,b)=>b.month.localeCompare(a.month)).slice(0,6);
   const igH=document.getElementById('ig-history');
-  if(igH){
-    const entries=Object.values(state.instagram).filter(e=>e.clientId===clientId).sort((a,b)=>b.month.localeCompare(a.month)).slice(0,6);
-    igH.innerHTML=entries.length?`<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="color:var(--text3);font-weight:700;border-bottom:2px solid var(--border)"><th style="padding:8px 6px;text-align:left">Mês</th><th style="padding:8px 6px;text-align:right">Views</th><th style="padding:8px 6px;text-align:right">Alcance</th><th style="padding:8px 6px;text-align:right">Engaj.</th><th style="padding:8px 6px;text-align:right">Seguid.</th><th style="padding:8px 6px;text-align:right">Shares</th><th style="padding:8px 6px;text-align:right">Bio</th></tr></thead><tbody>${entries.map(e=>{const[ey,em]=e.month.split('-');const lbl=new Date(parseInt(ey),parseInt(em)-1,1).toLocaleDateString('pt-BR',{month:'short',year:'numeric'});return`<tr style="border-bottom:1px solid var(--border)"><td style="padding:8px 6px;font-weight:600">${lbl}</td><td style="padding:8px 6px;text-align:right">${(e.views||0).toLocaleString('pt-BR')}</td><td style="padding:8px 6px;text-align:right">${(e.alcance||0).toLocaleString('pt-BR')}</td><td style="padding:8px 6px;text-align:right;color:#e1306c;font-weight:700">${(e.engajamento||0).toLocaleString('pt-BR')}</td><td style="padding:8px 6px;text-align:right;color:var(--success);font-weight:700">+${e.seguidores||0}</td><td style="padding:8px 6px;text-align:right">${e.shares||0}</td><td style="padding:8px 6px;text-align:right">${e.bio||0}</td></tr>`;}).join('')}</tbody></table></div>`:'<div class="t-muted" style="font-size:12px;padding:12px 0;text-align:center">Sem histórico</div>';
-  }
+  if(igH)igH.innerHTML=entries.length?`<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="color:var(--text3);font-weight:700;border-bottom:2px solid var(--border)"><th style="padding:8px 6px;text-align:left">Mês</th><th style="padding:8px 6px;text-align:right">Views</th><th style="padding:8px 6px;text-align:right">Engaj.</th><th style="padding:8px 6px;text-align:right">Seguid.</th><th style="padding:8px 6px;text-align:right">Shares</th><th style="padding:8px 6px;text-align:right">Bio</th></tr></thead><tbody>${entries.map(e=>{const[ey,em]=e.month.split('-');const lbl=new Date(parseInt(ey),parseInt(em)-1,1).toLocaleDateString('pt-BR',{month:'short',year:'numeric'});return`<tr style="border-bottom:1px solid var(--border)"><td style="padding:8px 6px;font-weight:600">${lbl}</td><td style="padding:8px 6px;text-align:right">${(e.views||0).toLocaleString('pt-BR')}</td><td style="padding:8px 6px;text-align:right;color:#e1306c;font-weight:700">${(e.engajamento||0).toLocaleString('pt-BR')}</td><td style="padding:8px 6px;text-align:right;color:var(--success);font-weight:700">+${e.seguidores||0}</td><td style="padding:8px 6px;text-align:right">${e.shares||0}</td><td style="padding:8px 6px;text-align:right">${e.bio||0}</td></tr>`;}).join('')}</tbody></table></div>`:'<div class="t-muted" style="font-size:12px;padding:12px 0;text-align:center">Sem histórico</div>';
 }
 
 load();

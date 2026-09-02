@@ -69,7 +69,7 @@ table{width:100%;border-collapse:collapse;font-size:12px;}
 th{padding:9px 8px;text-align:left;color:var(--text3);font-weight:700;border-bottom:2px solid var(--border);}
 td{padding:9px 8px;border-bottom:1px solid var(--border);}
 tr:last-child td{border-bottom:none;}
-.modal-bg{position:fixed;inset:0;background:rgba(15,15,35,.5);display:flex;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(5px);}
+.modal-bg{position:fixed;inset:0;background:rgba(15,15,35,.65);display:flex;align-items:center;justify-content:center;z-index:100;}
 .modal{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--rxl);padding:26px;width:560px;max-width:96vw;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(108,99,255,.2);}
 .modal-title{font-size:17px;font-weight:700;margin-bottom:20px;}
 .fg{margin-bottom:14px;}

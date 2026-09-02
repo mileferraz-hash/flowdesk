@@ -26,7 +26,7 @@ h1{font-size:22px;font-weight:800;margin-bottom:4px;display:flex;align-items:cen
 .card-header{padding:16px 20px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
 .card-title{font-size:13px;font-weight:700;}
 .card-body{padding:16px 20px;}
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px;}
 @media(max-width:700px){.metrics{grid-template-columns:1fr 1fr;}.grid2{grid-template-columns:1fr!important;}.grid3{grid-template-columns:1fr!important;}}
 .mcard{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--rxl);padding:18px;position:relative;overflow:hidden;box-shadow:var(--shadow);}
 .mcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
@@ -84,6 +84,12 @@ tr:last-child td{border-bottom:none;}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--text3);flex-shrink:0;}
 .dot.on{background:var(--success);}
 .hidden{display:none!important;}
+.content-card{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;}
+.content-embed{flex-shrink:0;width:200px;border-radius:var(--r);overflow:hidden;border:1.5px solid var(--border);background:var(--bg3);}
+.content-embed iframe{width:100%;height:260px;border:none;display:block;}
+.content-info{flex:1;min-width:180px;}
+.content-empty{font-size:12px;color:var(--text3);text-align:center;padding:16px 0;}
+.link-preview{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--r);padding:10px 13px;margin-top:8px;text-decoration:none;color:var(--purple);font-size:12px;font-weight:600;}
 </style>
 </head>
 <body>
@@ -113,7 +119,6 @@ tr:last-child td{border-bottom:none;}
     <!-- Métricas principais -->
     <div class="metrics">
       <div class="mcard acc-pink"><div class="micon mi-pink">👁️</div><div class="mlabel">Visualizações gerais</div><div class="mval" id="d-views" style="color:#e1306c">—</div><div class="msub" id="d-views-sub">—</div></div>
-      <div class="mcard acc-purple"><div class="micon mi-purple">👥</div><div class="mlabel">Contas alcançadas</div><div class="mval t-purple" id="d-alcance" style="color:var(--purple)">—</div></div>
       <div class="mcard acc-orange"><div class="micon mi-orange">❤️</div><div class="mlabel">Engajamento</div><div class="mval" id="d-eng" style="color:#f56040">—</div><div class="msub" id="d-eng-taxa">—</div></div>
       <div class="mcard acc-green"><div class="micon mi-green">➕</div><div class="mlabel">Novos seguidores</div><div class="mval" id="d-seg" style="color:var(--success)">—</div></div>
     </div>
@@ -131,6 +136,17 @@ tr:last-child td{border-bottom:none;}
       </div>
     </div>
 
+    <div class="grid2">
+      <div class="card">
+        <div class="card-header"><div class="card-title">🚀 Conteúdo que mais gerou seguidores</div></div>
+        <div class="card-body" id="d-top-followers"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">🏆 Conteúdo com mais visualização</div></div>
+        <div class="card-body" id="d-top-post"></div>
+      </div>
+    </div>
+
     <div class="grid3">
       <div class="card">
         <div class="card-header"><div class="card-title">👥 Crescimento</div></div>
@@ -144,12 +160,6 @@ tr:last-child td{border-bottom:none;}
         <div class="card-header"><div class="card-title">🌍 Alcance</div></div>
         <div class="card-body" id="d-reach"></div>
       </div>
-    </div>
-
-    <!-- Top post -->
-    <div class="card">
-      <div class="card-header"><div class="card-title">🏆 Post com maior visualização</div></div>
-      <div class="card-body" id="d-top-post"></div>
     </div>
 
     <!-- Histórico -->
@@ -171,19 +181,22 @@ tr:last-child td{border-bottom:none;}
     <div class="section-box">
       <div class="section-box-title">📊 Métricas do mês</div>
       <div class="fr">
-        <div class="fg"><label class="fl">➕ Seguidores novos</label><input class="fi" type="number" id="m-seg" placeholder="0" min="0"/></div>
-        <div class="fg"><label class="fl">👥 Contas alcançadas</label><input class="fi" type="number" id="m-alcance" placeholder="0" min="0"/></div>
+        <div class="fg"><label class="fl">➕ Seguidores novos</label><input class="fi" type="number" step="any" id="m-seg" placeholder="0" min="0"/></div>
+        <div class="fg"><label class="fl">🔗 Cliques link da bio</label><input class="fi" type="number" step="any" id="m-bio" placeholder="0" min="0"/></div>
       </div>
       <div class="fr">
-        <div class="fg"><label class="fl">🔗 Cliques link da bio</label><input class="fi" type="number" id="m-bio" placeholder="0" min="0"/></div>
-        <div class="fg"><label class="fl">❤️ Engajamento total</label><input class="fi" type="number" id="m-eng" placeholder="0" min="0"/></div>
+        <div class="fg"><label class="fl">❤️ Engajamento total</label><input class="fi" type="number" step="any" id="m-eng" placeholder="0" min="0"/></div>
+        <div class="fg"><label class="fl">👁️ Visualizações gerais</label><input class="fi" type="number" step="any" id="m-views" placeholder="0" min="0"/></div>
       </div>
       <div class="fr">
-        <div class="fg"><label class="fl">👁️ Visualizações gerais</label><input class="fi" type="number" id="m-views" placeholder="0" min="0"/></div>
-        <div class="fg"><label class="fl">🌍 Views não seguidores</label><input class="fi" type="number" id="m-views-nseg" placeholder="0" min="0"/></div>
+        <div class="fg"><label class="fl">🌍 Views não seguidores</label><input class="fi" type="number" step="any" id="m-views-nseg" placeholder="0" min="0"/></div>
+        <div class="fg"><label class="fl">🔄 Conteúdos compartilhados</label><input class="fi" type="number" step="any" id="m-shares" placeholder="0" min="0"/></div>
       </div>
-      <div class="fg"><label class="fl">🔄 Conteúdos compartilhados</label><input class="fi" type="number" id="m-shares" placeholder="0" min="0"/></div>
       <div class="fg"><label class="fl">🏆 Post maior visualização (link)</label><input class="fi" id="m-top-post" placeholder="https://www.instagram.com/p/..."/></div>
+      <div class="fr">
+        <div class="fg"><label class="fl">🚀 Post que mais gerou seguidores (link)</label><input class="fi" id="m-top-follow-post" placeholder="https://www.instagram.com/p/..."/></div>
+        <div class="fg"><label class="fl">🚀 Seguidores gerados por esse post</label><input class="fi" type="number" step="any" id="m-top-follow-count" placeholder="0" min="0"/></div>
+      </div>
     </div>
     <div class="fg"><label class="fl">📝 Observações / Estratégia próximo mês</label><textarea class="fi" id="m-obs" rows="3" placeholder="O que funcionou, o que melhorar..."></textarea></div>
     <div class="fa">
@@ -201,6 +214,27 @@ const db=firebase.firestore();
 
 let clients=[];
 let igData={};
+
+// converte texto digitado em número exato, sem arredondar (aceita vírgula ou ponto)
+function parseNum(v){if(v===null||v===undefined||v==='')return 0;const n=parseFloat(String(v).replace(',','.'));return isNaN(n)?0:n;}
+// extrai o ID de um post/reel do Instagram a partir do link, para montar o embed
+function igEmbedUrl(link){
+  if(!link)return null;
+  const m=link.match(/instagram\.com\/(p|reel|tv)\/([A-Za-z0-9_-]+)/);
+  if(!m)return null;
+  return`https://www.instagram.com/${m[1]}/${m[2]}/embed`;
+}
+function renderContentCard(link,extraLabel,extraVal,extraColor){
+  if(!link)return`<div class="content-empty">Nenhum link cadastrado</div>`;
+  const embed=igEmbedUrl(link);
+  return`<div class="content-card">
+    ${embed?`<div class="content-embed"><iframe src="${embed}" loading="lazy" scrolling="no" allowtransparency="true"></iframe></div>`:''}
+    <div class="content-info">
+      ${extraLabel?`<div class="hl"><span class="hl-lbl">${extraLabel}</span><span class="hl-val" style="${extraColor?'color:'+extraColor:''}">${extraVal}</span></div>`:''}
+      <a href="${link}" target="_blank" class="link-preview">🔗 Ver post no Instagram</a>
+    </div>
+  </div>`;
+}
 
 // ── Init ──
 async function init(){
@@ -258,7 +292,7 @@ function openModal(){
   // preencher se tiver dados
   const key=clientId&&month?`${clientId}_${month}`:null;
   const d=key?igData[key]:null;
-  const fields={seg:'seguidores',alcance:'alcance',bio:'bio',eng:'engajamento',views:'views','views-nseg':'viewsNseg',shares:'shares','top-post':'topPost',obs:'obs'};
+  const fields={seg:'seguidores',bio:'bio',eng:'engajamento',views:'views','views-nseg':'viewsNseg',shares:'shares','top-post':'topPost','top-follow-post':'topFollowPost','top-follow-count':'topFollowCount',obs:'obs'};
   Object.entries(fields).forEach(([elSuffix,prop])=>{
     const el=document.getElementById('m-'+elSuffix);
     if(el)el.value=d&&d[prop]!=null?d[prop]:'';
@@ -276,14 +310,15 @@ async function saveData(){
 
   const data={
     clientId,month,
-    seguidores:parseInt(document.getElementById('m-seg').value)||0,
-    alcance:parseInt(document.getElementById('m-alcance').value)||0,
-    bio:parseInt(document.getElementById('m-bio').value)||0,
-    engajamento:parseInt(document.getElementById('m-eng').value)||0,
-    views:parseInt(document.getElementById('m-views').value)||0,
-    viewsNseg:parseInt(document.getElementById('m-views-nseg').value)||0,
-    shares:parseInt(document.getElementById('m-shares').value)||0,
+    seguidores:parseNum(document.getElementById('m-seg').value),
+    bio:parseNum(document.getElementById('m-bio').value),
+    engajamento:parseNum(document.getElementById('m-eng').value),
+    views:parseNum(document.getElementById('m-views').value),
+    viewsNseg:parseNum(document.getElementById('m-views-nseg').value),
+    shares:parseNum(document.getElementById('m-shares').value),
     topPost:document.getElementById('m-top-post').value.trim(),
+    topFollowPost:document.getElementById('m-top-follow-post').value.trim(),
+    topFollowCount:parseNum(document.getElementById('m-top-follow-count').value),
     obs:document.getElementById('m-obs').value.trim(),
     updatedAt:new Date().toISOString()
   };
@@ -321,12 +356,11 @@ function renderDash(){
   if(!d){empty.classList.remove('hidden');dash.classList.add('hidden');return;}
   empty.classList.add('hidden');dash.classList.remove('hidden');
 
-  const taxa=d.alcance>0?((d.engajamento/d.alcance)*100).toFixed(1):'0';
+  const taxa=d.views>0?((d.engajamento/d.views)*100).toFixed(1):'0';
   const pctNseg=d.views>0?((d.viewsNseg/d.views)*100).toFixed(0):'0';
 
   setText('d-views',(d.views||0).toLocaleString('pt-BR'));
   setText('d-views-sub',`${pctNseg}% de não seguidores`);
-  setText('d-alcance',(d.alcance||0).toLocaleString('pt-BR'));
   setText('d-eng',(d.engajamento||0).toLocaleString('pt-BR'));
   setText('d-eng-taxa',`Taxa: ${taxa}%`);
   setText('d-seg','+'+(d.seguidores||0).toLocaleString('pt-BR'));
@@ -349,7 +383,7 @@ function renderDash(){
   const taxaN=parseFloat(taxa);
   if(taxaN>=3)ins.push({e:'🔥',t:`Engajamento excelente: ${taxa}%`,c:'var(--success)'});
   else if(taxaN>=1)ins.push({e:'📊',t:`Engajamento ok (${taxa}%) — reforçar CTAs`,c:'var(--warn)'});
-  else if(d.alcance>0)ins.push({e:'⚠️',t:`Engajamento baixo (${taxa}%) — revisar tipo de conteúdo`,c:'var(--danger)'});
+  else if(d.views>0)ins.push({e:'⚠️',t:`Engajamento baixo (${taxa}%) — revisar tipo de conteúdo`,c:'var(--danger)'});
   if(parseInt(pctNseg)>50)ins.push({e:'🌍',t:`${pctNseg}% das views são de não seguidores — ótimo alcance orgânico!`,c:'var(--purple)'});
   if(d.seguidores>0)ins.push({e:'📈',t:`+${d.seguidores} novos seguidores este mês`,c:'#2563eb'});
   if(d.bio>0)ins.push({e:'🔗',t:`${d.bio} cliques no link da bio`,c:'#db2777'});
@@ -358,19 +392,23 @@ function renderDash(){
   const insEl=document.getElementById('d-insights');
   if(insEl)insEl.innerHTML=ins.length?ins.map(i=>`<div class="insight"><span class="insight-icon">${i.e}</span><span class="insight-txt" style="color:${i.c}">${i.t}</span></div>`).join(''):'<div style="font-size:12px;color:var(--text3);padding:16px 0;text-align:center">Sem insights disponíveis</div>';
 
+  // conteúdo que mais gerou seguidores
+  const tf=document.getElementById('d-top-followers');
+  if(tf)tf.innerHTML=renderContentCard(d.topFollowPost,'🚀 Seguidores gerados',(d.topFollowCount||0).toLocaleString('pt-BR'),'var(--success)');
+
+  // conteúdo com mais visualização
+  const tp=document.getElementById('d-top-post');
+  if(tp)tp.innerHTML=renderContentCard(d.topPost);
+
   // cards menores
   const gr=document.getElementById('d-growth');if(gr)gr.innerHTML=hl('➕ Novos seguidores',`+${(d.seguidores||0).toLocaleString('pt-BR')}`,'')+hl('🔄 Compartilhamentos',(d.shares||0).toLocaleString('pt-BR'),'')+hl('🔗 Cliques link bio',(d.bio||0).toLocaleString('pt-BR'),'');
   const eng=document.getElementById('d-engagement');if(eng)eng.innerHTML=hl('❤️ Total interações',(d.engajamento||0).toLocaleString('pt-BR'),'#e1306c')+hl('📊 Taxa engajamento',taxa+'%',taxaN>=3?'var(--success)':taxaN>=1?'var(--warn)':'var(--danger)');
   const reach=document.getElementById('d-reach');if(reach)reach.innerHTML=hl('👁️ Views totais',(d.views||0).toLocaleString('pt-BR'),'')+hl('🌍 Views não seguidores',(d.viewsNseg||0).toLocaleString('pt-BR'),'')+hl('% não seguidores',pctNseg+'%','var(--purple)');
 
-  // top post
-  const tp=document.getElementById('d-top-post');
-  if(tp)tp.innerHTML=d.topPost?`<div style="display:flex;align-items:center;gap:12px;padding:8px 0"><span style="font-size:13px;font-weight:600">🏆 Post com mais views:</span><a href="${d.topPost}" target="_blank" style="color:var(--purple);font-size:12px;font-weight:600;text-decoration:none;word-break:break-all">🔗 Ver post no Instagram</a></div>`:'<div style="font-size:12px;color:var(--text3);padding:8px 0">Nenhum link cadastrado</div>';
-
   // histórico
   const entries=Object.values(igData).filter(e=>e.clientId===clientId).sort((a,b)=>b.month.localeCompare(a.month)).slice(0,8);
   const hist=document.getElementById('d-history');
-  if(hist)hist.innerHTML=entries.length?`<div style="overflow-x:auto"><table><thead><tr><th>Mês</th><th style="text-align:right">Views</th><th style="text-align:right">Alcance</th><th style="text-align:right">Engaj.</th><th style="text-align:right">Seguidor.</th><th style="text-align:right">Shares</th><th style="text-align:right">Bio</th><th style="text-align:right">Taxa Eng.</th></tr></thead><tbody>${entries.map(e=>{const[ey,em]=e.month.split('-');const lbl=new Date(parseInt(ey),parseInt(em)-1,1).toLocaleDateString('pt-BR',{month:'short',year:'numeric'});const t=e.alcance>0?((e.engajamento/e.alcance)*100).toFixed(1)+'%':'—';return`<tr style="${e.month===month?'background:#f0efff;font-weight:600':''}"><td>${lbl}</td><td style="text-align:right">${(e.views||0).toLocaleString('pt-BR')}</td><td style="text-align:right">${(e.alcance||0).toLocaleString('pt-BR')}</td><td style="text-align:right;color:#e1306c;font-weight:700">${(e.engajamento||0).toLocaleString('pt-BR')}</td><td style="text-align:right;color:var(--success);font-weight:700">+${e.seguidores||0}</td><td style="text-align:right">${e.shares||0}</td><td style="text-align:right">${e.bio||0}</td><td style="text-align:right">${t}</td></tr>`;}).join('')}</tbody></table></div>`:'<div style="font-size:12px;color:var(--text3);padding:12px 0;text-align:center">Sem histórico</div>';
+  if(hist)hist.innerHTML=entries.length?`<div style="overflow-x:auto"><table><thead><tr><th>Mês</th><th style="text-align:right">Views</th><th style="text-align:right">Engaj.</th><th style="text-align:right">Seguidor.</th><th style="text-align:right">Shares</th><th style="text-align:right">Bio</th><th style="text-align:right">Taxa Eng.</th></tr></thead><tbody>${entries.map(e=>{const[ey,em]=e.month.split('-');const lbl=new Date(parseInt(ey),parseInt(em)-1,1).toLocaleDateString('pt-BR',{month:'short',year:'numeric'});const t=e.views>0?((e.engajamento/e.views)*100).toFixed(1)+'%':'—';return`<tr style="${e.month===month?'background:#f0efff;font-weight:600':''}"><td>${lbl}</td><td style="text-align:right">${(e.views||0).toLocaleString('pt-BR')}</td><td style="text-align:right;color:#e1306c;font-weight:700">${(e.engajamento||0).toLocaleString('pt-BR')}</td><td style="text-align:right;color:var(--success);font-weight:700">+${e.seguidores||0}</td><td style="text-align:right">${e.shares||0}</td><td style="text-align:right">${e.bio||0}</td><td style="text-align:right">${t}</td></tr>`;}).join('')}</tbody></table></div>`:'<div style="font-size:12px;color:var(--text3);padding:12px 0;text-align:center">Sem histórico</div>';
 }
 
 function hl(lbl,val,color){return`<div class="hl"><span class="hl-lbl">${lbl}</span><span class="hl-val" style="${color?'color:'+color:''}">${val}</span></div>`;}

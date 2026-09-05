@@ -172,6 +172,10 @@ body{font-family:'Poppins',system-ui,sans-serif;background:var(--bg);color:var(-
 .tl-meta{font-size:11px;color:var(--text3);margin-top:3px;}
 .tl-tags{display:flex;gap:4px;flex-wrap:wrap;flex-shrink:0;}
 .tl-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.arq-month-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:11px 16px;background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--r);margin:20px 0 10px;}
+.arq-month-header:first-child{margin-top:0;}
+.arq-month-title{font-size:13px;font-weight:700;color:var(--text);text-transform:capitalize;}
+.arq-month-stats{display:flex;gap:14px;font-size:11px;color:var(--text2);font-weight:600;}
 .client-row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);}
 .client-row:last-child{border-bottom:none;}
 .client-ava{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--pl));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0;}
@@ -378,8 +382,8 @@ textarea.form-input{resize:vertical;line-height:1.5;}
         </div>
         <div class="content">
           <div class="metrics" style="grid-template-columns:repeat(2,1fr);max-width:520px">
-            <div class="metric-card"><div class="metric-accent ma-blue"></div><div class="metric-icon-wrap mw-blue">✅</div><div class="metric-label">Total de demandas concluídas</div><div class="metric-value t-success" id="arq-total-count">0</div></div>
-            <div class="metric-card"><div class="metric-accent ma-purple"></div><div class="metric-icon-wrap mw-purple">⏱️</div><div class="metric-label">Total de horas nelas</div><div class="metric-value t-purple" id="arq-total-horas">0h</div></div>
+            <div class="metric-card"><div class="metric-accent ma-blue"></div><div class="metric-icon-wrap mw-blue">✅</div><div class="metric-label">Total geral de demandas</div><div class="metric-value t-success" id="arq-total-count">0</div></div>
+            <div class="metric-card"><div class="metric-accent ma-purple"></div><div class="metric-icon-wrap mw-purple">⏱️</div><div class="metric-label">Total geral de horas</div><div class="metric-value t-purple" id="arq-total-horas">0h</div></div>
           </div>
           <div class="task-list-view" id="arquivadas-list"></div>
         </div>
@@ -857,10 +861,27 @@ function renderArquivadas(){
   setText('arq-total-horas',fmtH(totalHoras));
   setText('arquivadas-sub',`${done.length} demanda${done.length===1?'':'s'} concluída${done.length===1?'':'s'} no total`);
   if(!done.length){el.innerHTML='<div class="t-muted" style="font-size:12px;text-align:center;padding:40px 0">Nenhuma tarefa concluída ainda</div>';return;}
-  el.innerHTML=done.map(t=>{
-    const c=state.clients.find(c=>c.id===t.clienteId),h=getTaskHours(t.id);
-    const concStr=t.concluidaEm?new Date(t.concluidaEm).toLocaleDateString('pt-BR'):'—';
-    return`<div class="tl-item"><div class="tl-status-dot" style="background:var(--success)"></div><div class="tl-info"><div class="tl-name">${t.nome}</div><div class="tl-meta">${c?c.nome:'Sem cliente'} · ✅ Concluída em ${concStr} · ⏱ ${fmtH(h)}</div></div><div class="tl-tags">${buildTaskTags(t)}</div><div class="tl-right"><button class="btn btn-ghost btn-sm" onclick="openTaskSessionsModal('${t.id}')">⏱️ Horas</button><button class="btn btn-ghost btn-sm" onclick="moveTask('${t.id}','fazendo')">↩ Reabrir</button><button class="btn-danger-sm" onclick="deleteTask('${t.id}')">🗑️</button></div></div>`;
+  // agrupa por mês (com base na data de conclusão, ou criação se não houver)
+  const groups={};
+  done.forEach(t=>{
+    const ref=t.concluidaEm||t.criadaEm||new Date().toISOString();
+    const d=new Date(ref);
+    const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    if(!groups[key])groups[key]=[];
+    groups[key].push(t);
+  });
+  const keysSorted=Object.keys(groups).sort((a,b)=>b.localeCompare(a));
+  el.innerHTML=keysSorted.map(key=>{
+    const[y,m]=key.split('-').map(Number);
+    const label=new Date(y,m-1,1).toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+    const tasksInMonth=groups[key];
+    const monthHoras=tasksInMonth.reduce((a,t)=>a+getTaskHours(t.id),0);
+    const itemsHtml=tasksInMonth.map(t=>{
+      const c=state.clients.find(c=>c.id===t.clienteId),h=getTaskHours(t.id);
+      const concStr=t.concluidaEm?new Date(t.concluidaEm).toLocaleDateString('pt-BR'):'—';
+      return`<div class="tl-item"><div class="tl-status-dot" style="background:var(--success)"></div><div class="tl-info"><div class="tl-name">${t.nome}</div><div class="tl-meta">${c?c.nome:'Sem cliente'} · ✅ Concluída em ${concStr} · ⏱ ${fmtH(h)}</div></div><div class="tl-tags">${buildTaskTags(t)}</div><div class="tl-right"><button class="btn btn-ghost btn-sm" onclick="openTaskSessionsModal('${t.id}')">⏱️ Horas</button><button class="btn btn-ghost btn-sm" onclick="moveTask('${t.id}','fazendo')">↩ Reabrir</button><button class="btn-danger-sm" onclick="deleteTask('${t.id}')">🗑️</button></div></div>`;
+    }).join('');
+    return`<div class="arq-month-header"><div class="arq-month-title">📅 ${label}</div><div class="arq-month-stats"><span>✅ ${tasksInMonth.length} demanda${tasksInMonth.length===1?'':'s'}</span><span>⏱ ${fmtH(monthHoras)}</span></div></div>${itemsHtml}`;
   }).join('');
 }
 function viewBriefing(taskId){

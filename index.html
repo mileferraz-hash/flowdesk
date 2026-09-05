@@ -374,9 +374,13 @@ textarea.form-input{resize:vertical;line-height:1.5;}
       <!-- ARQUIVADAS -->
       <div id="page-arquivadas" class="hidden">
         <div class="page-header">
-          <div><div class="page-title">🗄️ Arquivadas</div><div class="page-sub">Histórico completo de tarefas concluídas</div></div>
+          <div><div class="page-title">🗄️ Arquivadas</div><div class="page-sub" id="arquivadas-sub">Histórico completo de tarefas concluídas</div></div>
         </div>
         <div class="content">
+          <div class="metrics" style="grid-template-columns:repeat(2,1fr);max-width:520px">
+            <div class="metric-card"><div class="metric-accent ma-blue"></div><div class="metric-icon-wrap mw-blue">✅</div><div class="metric-label">Total de demandas concluídas</div><div class="metric-value t-success" id="arq-total-count">0</div></div>
+            <div class="metric-card"><div class="metric-accent ma-purple"></div><div class="metric-icon-wrap mw-purple">⏱️</div><div class="metric-label">Total de horas nelas</div><div class="metric-value t-purple" id="arq-total-horas">0h</div></div>
+          </div>
           <div class="task-list-view" id="arquivadas-list"></div>
         </div>
       </div>
@@ -848,6 +852,10 @@ function renderTaskList(){
 function renderArquivadas(){
   const el=document.getElementById('arquivadas-list');if(!el)return;
   const done=state.tasks.filter(t=>t.status==='concluido').sort((a,b)=>new Date(b.concluidaEm||b.criadaEm||0)-new Date(a.concluidaEm||a.criadaEm||0));
+  const totalHoras=done.reduce((a,t)=>a+getTaskHours(t.id),0);
+  setText('arq-total-count',done.length);
+  setText('arq-total-horas',fmtH(totalHoras));
+  setText('arquivadas-sub',`${done.length} demanda${done.length===1?'':'s'} concluída${done.length===1?'':'s'} no total`);
   if(!done.length){el.innerHTML='<div class="t-muted" style="font-size:12px;text-align:center;padding:40px 0">Nenhuma tarefa concluída ainda</div>';return;}
   el.innerHTML=done.map(t=>{
     const c=state.clients.find(c=>c.id===t.clienteId),h=getTaskHours(t.id);
